@@ -1,0 +1,1 @@
+option('unquoted_value', type: 'string')
