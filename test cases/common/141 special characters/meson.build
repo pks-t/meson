@@ -49,7 +49,7 @@ gen2 = custom_target('gen2',
 special = [
   ['amp', '&'],
   ['at', '@'],
-  ['backslash', '\\'],
+  ['backslash', '\\\\'],
   ['dollar', '$'],
   ['gt', '>'],
   ['lt', '<'],

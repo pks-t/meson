@@ -42,6 +42,7 @@ class StringHolder(ObjectHolder[str]):
             'splitlines': self.splitlines_method,
             'strip': self.strip_method,
             'substring': self.substring_method,
+            'to_c_quoted': self.to_c_quoted_method,
             'to_int': self.to_int_method,
             'to_lower': self.to_lower_method,
             'to_upper': self.to_upper_method,
@@ -144,6 +145,13 @@ class StringHolder(ObjectHolder[str]):
         start = args[0] if args[0] is not None else 0
         end = args[1] if args[1] is not None else len(self.held_object)
         return self.held_object[start:end]
+
+    @noKwargs
+    @noPosargs
+    @FeatureNew('str.c_quoted', '1.8.0')
+    def to_c_quoted_method(self, args: T.List[TYPE_var], kwargs: TYPE_kwargs) -> str:
+        escaped_val = '\\"'.join(self.held_object.replace('\\', '\\\\').split('"'))
+        return f'"{escaped_val}"'
 
     @noKwargs
     @noPosargs

@@ -5262,3 +5262,23 @@ class AllPlatformTests(BasePlatformTests):
         output = entry['output']
 
         self.build(output, extra_args=['-j1'])
+
+    def test_str_c_quoted(self):
+        testdir = os.path.join(self.unit_test_dir, '128 c_quoted')
+
+        testcases = {
+            'simple': '"simple"',
+            'string with spaces': '"string with spaces"',
+            'backslash \\': '"backslash \\\\"',
+            '\'single quotes\'': '"\'single quotes\'"',
+            '"double quotes"': '"\\\"double quotes\\\""',
+        }
+
+        for unquoted, quoted in testcases.items():
+            out = self.init(testdir, extra_args = ['-Dunquoted_value=' + unquoted])
+            self.assertIn(f'    unquoted_value: {unquoted}', out.splitlines())
+            self.assertIn(f'    quoted_value  : {quoted}', out.splitlines())
+
+            self.build()
+            self.run_tests()
+            self.wipe()

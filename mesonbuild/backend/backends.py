@@ -985,17 +985,6 @@ class Backend:
         except (KeyError, AttributeError):
             return False
 
-    @staticmethod
-    def escape_extra_args(args: T.List[str]) -> T.List[str]:
-        # all backslashes in defines are doubly-escaped
-        extra_args: T.List[str] = []
-        for arg in args:
-            if arg.startswith(('-D', '/D')):
-                arg = arg.replace('\\', '\\\\')
-            extra_args.append(arg)
-
-        return extra_args
-
     def get_no_stdlib_args(self, target: 'build.BuildTarget', compiler: 'Compiler') -> T.List[str]:
         if compiler.language in self.build.stdlibs[target.for_machine]:
             return compiler.get_no_stdinc_args()
@@ -2055,7 +2044,7 @@ class Backend:
         commands += compiler.get_compile_only_args()
         # Add per-target compile args, f.ex, `c_args : ['-DFOO']`. We set these
         # near the end since these are supposed to override everything else.
-        commands += self.escape_extra_args(target.get_extra_args(compiler.get_language()))
+        commands += target.get_extra_args(compiler.get_language())
         # Do not escape this one, it is interpreted by the build system
         # (Xcode considers these as variables to expand at build time)
         if extras is not None:
